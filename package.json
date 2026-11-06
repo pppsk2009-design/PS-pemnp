@@ -1,0 +1,36 @@
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+
+// محاكاة لردود السيرفرات الرسمية
+app.get('/*', (req, res) => {
+    console.log(`Request from game: ${req.url}`);
+
+    // لو اللعبة بتطلب بيانات الحساب أو الإعدادات
+    if (req.url.includes('config') || req.url.includes('user')) {
+        return res.json({
+            "status": "success",
+            "pc_logo": true,
+            "account_verified": true,
+            "server_region": "all",
+            "version": "current"
+        });
+    }
+
+    // الرد العام لأي طلب تاني عشان اللعبة متفصلش
+    res.json({
+        "status": "success",
+        "pc_logo": true,
+        "result": "ok",
+        "data": {
+            "is_pc": true,
+            "logo_visible": true
+        }
+    });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
